@@ -33,7 +33,14 @@ def create_app(config_name='development'):
     
     # Load configuration
     app.config.from_object(config_dict.get(config_name, config_dict['default']))
-    
+
+    # Ensure environment variables override config defaults (important for Render/CI).
+    # Alembic/Flask may run without the same env-loading behavior as the app runtime.
+    if os.getenv('SQLALCHEMY_DATABASE_URI'):
+        app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
+    if os.getenv('SECRET_KEY'):
+        app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+
     # Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db)

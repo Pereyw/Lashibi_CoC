@@ -65,15 +65,8 @@ class ProductionConfig(Config):
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = 'Lax'
     
-    # Ensure SECRET_KEY is set in production
-    SECRET_KEY = os.getenv('SECRET_KEY')
-    if not SECRET_KEY:
-        raise ValueError("SECRET_KEY environment variable must be set in production!")
-    
-    # Database must be configured via DATABASE_URL
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
-    if not SQLALCHEMY_DATABASE_URI:
-        raise ValueError("DATABASE_URL environment variable must be set in production!")
+    # Note: SECRET_KEY and DATABASE_URL should be set via environment variables
+    # They are checked at runtime in create_app() for production
 
 
 # Configuration dictionary
