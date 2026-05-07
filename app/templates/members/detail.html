@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}{{ member.get_full_name() }} - Church Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1>{{ member.get_full_name() }}</h1>
+            <p class="text-muted"><i class="fas fa-id-card"></i> Member ID: #{{ member.id }}</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{{ url_for('members.edit_member', member_id=member.id) }}" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+            <form method="POST" action="{{ url_for('members.delete_member', member_id=member.id) }}" style="display:inline;">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Member Info -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">Personal Information</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Email:</strong> {{ member.email or '—' }}</p>
+                            <p><strong>Phone:</strong> {{ member.phone or '—' }}</p>
+                            <p><strong>Address:</strong> {{ member.address or '—' }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Date of Birth:</strong> {{ member.date_of_birth or '—' }} {% if member.date_of_birth %}<span class="text-muted">({{ member.get_age() }} years)</span>{% endif %}</p>
+                            <p><strong>Baptism Date:</strong> {% if member.baptism_date %}<span class="badge bg-success">{{ member.baptism_date.strftime('%B %d, %Y') }}</span>{% else %}<span class="text-muted">Not recorded</span>{% endif %}</p>
+                            <p><strong>Gender:</strong> {{ member.gender or '—' }}</p>
+                            <p><strong>Joined:</strong> {{ member.join_date.strftime('%B %d, %Y') }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">Member Statistics</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="text-center p-3">
+                                <div style="font-size: 2rem; font-weight: bold; color: #3498db;">{{ attendance_count }}</div>
+                                <small class="text-muted">Services Attended</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center p-3">
+                                <div style="font-size: 2rem; font-weight: bold; color: #2ecc71;">{{ total_offerings | currency }}</div>
+                                <small class="text-muted">Total Offerings</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center p-3">
+                                <div style="font-size: 2rem; font-weight: bold; color: #e74c3c;">
+                                    <span class="badge bg-{% if member.status.value == 'active' %}success{% else %}secondary{% endif %}">{{ member.status.value.title() }}</span>
+                                </div>
+                                <small class="text-muted">Status</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">Ministry Groups</div>
+                <div class="card-body">
+                    {% if member.groups %}
+                        <ul class="list-group list-group-flush">
+                            {% for group in member.groups %}
+                                <li class="list-group-item">{{ group.name }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted text-center">No groups assigned</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">Notes</div>
+                <div class="card-body">
+                    <p>{{ member.notes or 'No notes' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

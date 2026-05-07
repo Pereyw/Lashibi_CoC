@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Services - Church Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1><i class="fas fa-calendar"></i> Services</h1>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{{ url_for('services.create_service') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Create Service
+            </a>
+        </div>
+    </div>
+    
+    <!-- Services Table -->
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Service Name</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Location</th>
+                        <th>Attendance</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for service in services %}
+                        <tr>
+                            <td>
+                                <strong>{{ service.name }}</strong>
+                            </td>
+                            <td>{{ service.service_type.value.replace('_', ' ').title() }}</td>
+                            <td>{{ service.date.strftime('%m/%d/%Y') }}</td>
+                            <td>{{ service.location or '—' }}</td>
+                            <td>
+                                <span class="badge bg-info">
+                                    {{ service.get_attendance_count() }}/{{ service.get_registered_count() }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('services.view_service', service_id=service.id) }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ url_for('services.edit_service', service_id=service.id) }}" class="btn btn-sm btn-outline-warning">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{{ url_for('services.attendance', service_id=service.id) }}" class="btn btn-sm btn-outline-success">
+                                    <i class="fas fa-check"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">No services found</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Record Offering - Church Management{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1><i class="fas fa-hand-holding-heart"></i> Record Offering</h1>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form.amount.label(class="form-label") }}
+                                {{ form.amount(class="form-control") }}
+                                {% if form.amount.errors %}<small class="text-danger">{{ form.amount.errors[0] }}</small>{% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.date.label(class="form-label") }}
+                                {{ form.date(class="form-control") }}
+                                {% if form.date.errors %}<small class="text-danger">{{ form.date.errors[0] }}</small>{% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.category_id.label(class="form-label") }}
+                            {{ form.category_id(class="form-select") }}
+                            {% if form.category_id.errors %}<small class="text-danger">{{ form.category_id.errors[0] }}</small>{% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.received_by_user_id.label(class="form-label") }}
+                            {{ form.received_by_user_id(class="form-select") }}
+                            {% if form.received_by_user_id.errors %}<small class="text-danger">{{ form.received_by_user_id.errors[0] }}</small>{% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.member_id.label(class="form-label") }}
+                            {{ form.member_id(class="form-select") }}
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            {{ form.is_anonymous(class="form-check-input") }}
+                            {{ form.is_anonymous.label(class="form-check-label") }}
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form.payment_method.label(class="form-label") }}
+                                {{ form.payment_method(class="form-select") }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.reference_number.label(class="form-label") }}
+                                {{ form.reference_number(class="form-control", placeholder="Check #, Transaction ID") }}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.notes.label(class="form-label") }}
+                            {{ form.notes(class="form-control", rows=4) }}
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            {{ form.submit(class="btn btn-primary") }}
+                            <a href="{{ url_for('financial.list_offerings') }}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Financial - Church Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1><i class="fas fa-dollar-sign"></i> Financial Management</h1>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{{ url_for('financial.create_offering') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Record Offering
+            </a>
+        </div>
+    </div>
+    
+    <!-- Dashboard Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="dashboard-card">
+                <h6><i class="fas fa-calendar-month"></i> This Month</h6>
+                <div class="value">{{ total_offerings_month | currency }}</div>
+                <small class="text-muted">{{ offering_count_month }} transactions</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="dashboard-card">
+                <h6><i class="fas fa-infinity"></i> All Time</h6>
+                <div class="value">{{ total_offerings_all | currency }}</div>
+                <small class="text-muted">Total received</small>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Quick Links</div>
+                <div class="card-body">
+                    <a href="{{ url_for('financial.list_offerings') }}" class="btn btn-sm btn-outline-primary">View All Offerings</a>
+                    <a href="{{ url_for('financial.list_categories') }}" class="btn btn-sm btn-outline-secondary">Manage Categories</a>
+                    <a href="{{ url_for('financial.reports') }}" class="btn btn-sm btn-outline-success">View Reports</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Categories Summary -->
+    <div class="card">
+        <div class="card-header">Categories</div>
+        <div class="table-responsive">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Offerings Count</th>
+                        <th>Total Amount</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in categories %}
+                        <tr>
+                            <td>{{ category.name }}</td>
+                            <td>{{ category.get_offering_count() }}</td>
+                            <td>{{ category.get_total_offerings() | currency }}</td>
+                            <td>
+                                <a href="{{ url_for('financial.list_offerings', category_id=category.id) }}" class="btn btn-sm btn-outline-primary">View</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

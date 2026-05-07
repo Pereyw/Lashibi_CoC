@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}{{ service.name }} - Church Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1>{{ service.name }}</h1>
+            <p class="text-muted">
+                <i class="fas fa-calendar"></i> {{ service.date.strftime('%A, %B %d, %Y') }}
+                {% if service.start_time %}<br><i class="fas fa-clock"></i> {{ service.start_time.strftime('%I:%M %p') }}{% endif %}
+            </p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{{ url_for('services.edit_service', service_id=service.id) }}" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+            <a href="{{ url_for('services.attendance', service_id=service.id) }}" class="btn btn-success">
+                <i class="fas fa-check"></i> Record Attendance
+            </a>
+        </div>
+    </div>
+    
+    <!-- Service Info -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">Service Details</div>
+                <div class="card-body">
+                    <p><strong>Type:</strong> {{ service.service_type.value.replace('_', ' ').title() }}</p>
+                    <p><strong>Location:</strong> {{ service.location or '—' }}</p>
+                    <p><strong>Notes:</strong> {{ service.notes or '—' }}</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">Attendance Records</div>
+                <div class="table-responsive">
+                    <table class="table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Member</th>
+                                <th>Status</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in attendance_records %}
+                                <tr>
+                                    <td>{{ record.member.get_full_name() }}</td>
+                                    <td>
+                                        {% if record.attended %}
+                                            <span class="badge bg-success">Present</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Absent</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ record.notes or '—' }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Attendance Summary</div>
+                <div class="card-body">
+                    <p><strong>Total Registered:</strong> {{ service.get_registered_count() }}</p>
+                    <p><strong>Attended:</strong> {{ service.get_attendance_count() }}</p>
+                    <p><strong>Attendance Rate:</strong> <span class="badge bg-info">{{ service.get_attendance_rate() }}%</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

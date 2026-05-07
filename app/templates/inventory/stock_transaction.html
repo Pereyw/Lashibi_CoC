@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}{% if transaction_type == 'in' %}Add Stock{% else %}Remove Stock{% endif %} - Church Management{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card mt-5">
+                <div class="card-header">
+                    <i class="fas fa-box"></i> {{ item.name }}
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label class="form-label">Current Stock</label>
+                            <input type="text" class="form-control" value="{{ item.quantity }} {{ item.unit }}" disabled>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">{% if transaction_type == 'in' %}Quantity to Add{% else %}Quantity to Remove{% endif %}</label>
+                            <input type="number" name="quantity" class="form-control" required min="1">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Notes</label>
+                            <textarea name="notes" class="form-control" rows="3" placeholder="Reason for transaction"></textarea>
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-{% if transaction_type == 'in' %}success{% else %}danger{% endif %}">
+                                Record Transaction
+                            </button>
+                            <a href="{{ url_for('inventory.view_item', item_id=item.id) }}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

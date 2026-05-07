@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Financial Categories - Church Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1><i class="fas fa-list"></i> Financial Categories</h1>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{{ url_for('financial.create_category') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> New Category
+            </a>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>Category Name</th>
+                        <th>Description</th>
+                        <th>Offerings Count</th>
+                        <th>Total Amount</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in categories %}
+                        <tr>
+                            <td><strong>{{ category.name }}</strong></td>
+                            <td>{{ category.description or '—' }}</td>
+                            <td>{{ category.get_offering_count() }}</td>
+                            <td>{{ category.get_total_offerings() | currency }}</td>
+                            <td>
+                                <a href="{{ url_for('financial.list_offerings', category_id=category.id) }}" class="btn btn-sm btn-outline-primary">View</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

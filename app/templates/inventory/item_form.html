@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}{% if item %}Edit Item{% else %}Add Item{% endif %} - Church Management{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1>{% if item %}<i class="fas fa-edit"></i> Edit Item{% else %}<i class="fas fa-plus"></i> Add Item{% endif %}</h1>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="mb-3">
+                            {{ form.name.label(class="form-label") }}
+                            {{ form.name(class="form-control") }}
+                            {% if form.name.errors %}<small class="text-danger">{{ form.name.errors[0] }}</small>{% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.description.label(class="form-label") }}
+                            {{ form.description(class="form-control", rows=3) }}
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form.category.label(class="form-label") }}
+                                {{ form.category(class="form-control") }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.quantity.label(class="form-label") }}
+                                {{ form.quantity(class="form-control") }}
+                                {% if form.quantity.errors %}<small class="text-danger">{{ form.quantity.errors[0] }}</small>{% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form.unit.label(class="form-label") }}
+                                {{ form.unit(class="form-control", placeholder="pieces, boxes, liters, etc.") }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.unit_cost.label(class="form-label") }}
+                                {{ form.unit_cost(class="form-control") }}
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form.reorder_level.label(class="form-label") }}
+                                {{ form.reorder_level(class="form-control") }}
+                                {% if form.reorder_level.errors %}<small class="text-danger">{{ form.reorder_level.errors[0] }}</small>{% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.reorder_quantity.label(class="form-label") }}
+                                {{ form.reorder_quantity(class="form-control") }}
+                                {% if form.reorder_quantity.errors %}<small class="text-danger">{{ form.reorder_quantity.errors[0] }}</small>{% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form.supplier.label(class="form-label") }}
+                                {{ form.supplier(class="form-control") }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.location.label(class="form-label") }}
+                                {{ form.location(class="form-control") }}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.notes.label(class="form-label") }}
+                            {{ form.notes(class="form-control", rows=3) }}
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            {{ form.submit(class="btn btn-primary") }}
+                            <a href="{{ url_for('inventory.list_items') }}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

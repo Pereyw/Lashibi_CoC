@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Offerings - Church Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1><i class="fas fa-hand-holding-heart"></i> Offerings</h1>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{{ url_for('financial.create_offering') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Record Offering
+            </a>
+        </div>
+    </div>
+    
+    <!-- Filter -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-4">
+                    <select name="category_id" class="form-select">
+                        <option value="">-- All Categories --</option>
+                        {% for cat in categories %}
+                            <option value="{{ cat.id }}" {% if category_id == cat.id %}selected{% endif %}>{{ cat.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <input type="date" name="start_date" class="form-control" placeholder="From" value="{{ start_date or '' }}">
+                </div>
+                <div class="col-md-3">
+                    <input type="date" name="end_date" class="form-control" placeholder="To" value="{{ end_date or '' }}">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-outline-primary w-100">Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Offerings Table -->
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Donor</th>
+                        <th>Amount</th>
+                        <th>Method</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for offering in offerings %}
+                        <tr>
+                            <td>{{ offering.date.strftime('%m/%d/%Y') }}</td>
+                            <td>{{ offering.category.name }}</td>
+                            <td>{{ offering.get_donor_name() }}</td>
+                            <td><strong>{{ offering.amount | currency }}</strong></td>
+                            <td>{{ offering.payment_method or '—' }}</td>
+                            <td>
+                                <form method="POST" action="{{ url_for('financial.delete_offering', offering_id=offering.id) }}" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">No offerings found</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
