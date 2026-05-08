@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}400 - Bad Request{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center py-5">
+        <div class="col-md-6 text-center">
+            <h1 class="display-1">400</h1>
+            <h2 class="mb-4">Bad Request</h2>
+            <p class="lead mb-4">Your request could not be processed. Please try again.</p>
+            <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg">
+                <i class="fas fa-sign-in-alt"></i> Go to Login
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

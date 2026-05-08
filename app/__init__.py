@@ -54,8 +54,10 @@ def create_app(config_name='development'):
     
     @login_manager.user_loader
     def load_user(user_id):
-        from app.models import User
+        # Import the same User model (and SQLAlchemy db) used by the rest of the app.
+        from app.models.user import User
         return User.query.get(int(user_id))
+
     
     # Register context processors
     @app.context_processor
