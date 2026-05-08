@@ -12,11 +12,16 @@ from flask_wtf.csrf import CSRFProtect
 from datetime import datetime
 from config import config as config_dict
 from app.models.user import db
+from flask_migrate import Migrate
+from config.config import config
 
 # Initialize extensions
+db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
 csrf = CSRFProtect()
+
+
 
 
 def create_app(config_name='development'):
