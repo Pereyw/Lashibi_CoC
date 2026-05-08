@@ -66,8 +66,12 @@ def create_app(config_name='development'):
     def inject_datetime():
         return {'datetime': datetime}
     
-    # Register blueprints
+# Register blueprints
     register_blueprints(app)
+
+    # Ensure the app root always routes to the login page
+    register_root_login_redirect(app)
+
     
     # Register error handlers
     register_error_handlers(app)
@@ -100,6 +104,17 @@ def register_blueprints(app):
     app.register_blueprint(financial_bp)
     app.register_blueprint(inventory_bp)
     app.register_blueprint(dashboard_bp)
+
+
+def register_root_login_redirect(app):
+    """Ensure the application root always sends users to the login page."""
+
+    from flask import redirect, url_for
+
+    @app.route('/')
+    def root_login():
+        return redirect(url_for('auth.login'))
+
 
 
 def register_error_handlers(app):
