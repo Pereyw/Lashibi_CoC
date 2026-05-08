@@ -20,7 +20,7 @@ from config import config as config_dict
 db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
-csrf = CSRFProtect()
+csrf = CSRFProtect()db = SQLAlchemy()
 
 
 # =========================================================
