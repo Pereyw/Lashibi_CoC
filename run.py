@@ -28,15 +28,12 @@ app = create_app(os.getenv('FLASK_ENV', 'development'))
 
 
 # =========================================================
-# DATABASE INITIALIZATION
+# DATABASE INITIALIZATION (Migrations Only)
 # =========================================================
-with app.app_context():
-    try:
-        print("Initializing database tables...")
-        db.create_all()
-        print("Database tables initialized successfully.")
-    except Exception as e:
-        print(f"Database initialization failed: {e}")
+# IMPORTANT: Do NOT call db.create_all() in production.
+# Schema changes must be applied via Alembic/Flask-Migrate.
+# Use `flask db upgrade` (locally) or Render's `release` command (in production).
+
 
 
 # =========================================================
@@ -66,14 +63,14 @@ def make_shell_context():
 # =========================================================
 @app.cli.command("init-db")
 def init_db():
-    """
-    Initialize database tables.
-    """
-    try:
-        db.create_all()
-        print("Database initialized successfully.")
-    except Exception as e:
-        print(f"Database initialization error: {e}")
+    """Initialize/upgrade the database schema using migrations."""
+    # Avoid any schema creation via db.create_all().
+    # Usage: flask init-db (runs the same as `flask db upgrade`).
+    print("Running migrations: flask db upgrade")
+    from flask.cli import main as flask_main
+    return flask_main(["db", "upgrade"])
+
+
 
 
 # =========================================================

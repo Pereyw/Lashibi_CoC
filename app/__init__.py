@@ -41,9 +41,14 @@ def create_app(config_name='development'):
     if os.getenv('SECRET_KEY'):
         app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
+    # Import models so db.metadata is populated for migrations.
+    # (Necessary for Alembic autogenerate + app-factory pattern.)
+    import app.models  # noqa: F401
+
     # Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db)
+
     login_manager.init_app(app)
     csrf.init_app(app)
     

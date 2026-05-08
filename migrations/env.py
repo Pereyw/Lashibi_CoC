@@ -26,8 +26,12 @@ logger = logging.getLogger('alembic.env')
 # add your model's MetaData object here
 # for 'autogenerate' support
 from app import db, create_app
+# Import models so Alembic can see them in db.metadata.
+import app.models  # noqa: F401
+
 app = create_app(os.getenv('FLASK_ENV', 'development'))
 target_metadata = db.metadata
+
 
 # Set the sqlalchemy.url from the Flask app config
 config.set_main_option("sqlalchemy.url", app.config['SQLALCHEMY_DATABASE_URI'])
