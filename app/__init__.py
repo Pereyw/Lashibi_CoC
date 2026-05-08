@@ -13,7 +13,6 @@ from datetime import datetime
 from config import config as config_dict
 from app.models.user import db
 from flask_migrate import Migrate
-from config.config import config
 
 # Initialize extensions
 db = SQLAlchemy()
