@@ -7,19 +7,32 @@ import os
 from datetime import timedelta
 from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
+# =========================================================
+# DETERMINE ENVIRONMENT AND LOAD APPROPRIATE .env FILE
+# =========================================================
+flask_env = os.getenv('FLASK_ENV', 'development')
+
+# Load .env.local for development, .env for production
+if flask_env == 'development' and os.path.exists('.env.local'):
+    load_dotenv('.env.local', override=True)
+else:
+    load_dotenv()
 
 # =========================================================
 # DATABASE URL FIX FOR RENDER + SQLALCHEMY
 # =========================================================
-database_url = os.getenv(
-    'DATABASE_URL',
-    'sqlite:///church.db'
-)
+database_url = os.getenv('SQLALCHEMY_DATABASE_URI', None)
 
-# Render provides postgres://
-# SQLAlchemy requires postgresql://
+# If no explicit database URL, determine based on environment
+if not database_url:
+    if flask_env == 'development':
+        # Local development: MySQL
+        database_url = 'mysql+pymysql://root:root@localhost:3306/church_management'
+    else:
+        # Fallback to SQLite if MySQL not available
+        database_url = 'sqlite:///church.db'
+
+# Render provides postgres:// but SQLAlchemy requires postgresql://
 if database_url.startswith("postgres://"):
     database_url = database_url.replace(
         "postgres://",
